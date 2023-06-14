@@ -63,7 +63,7 @@ class Login(Resource):
         user = User.query.filter_by(email=email).first()
 
         if user is None:
-            response = {"message": "User with email {email} could not be found"}
+            response = {"message": f"User with email {email} could not be found"}
             return response, 400
         
         if not check_password_hash(user.password, password):

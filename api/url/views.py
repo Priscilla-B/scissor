@@ -11,11 +11,17 @@ url_namespace = Namespace(
     'url',
     description='a namespace for url shortening logic')
 
+shorten_url_model = url_namespace.model(
+    'Url', shorten_url_serializer)
+shorten_url_response_model = url_namespace.model(
+    'Url', shorten_url_response_serializer
+)
+
 @url_namespace.route('/shorten_url')
 class CreateUser(Resource, UrlHelpersMixin):
 
     @url_namespace.doc(description="Shorten a given url")
-    @url_namespace.expect(shorten_url_serializer)
+    @url_namespace.expect(shorten_url_model)
     @jwt_required()
     def post(self):
         """
@@ -31,5 +37,5 @@ class CreateUser(Resource, UrlHelpersMixin):
 
         new_url.save()
 
-        new_url_response = marshal(new_url, shorten_url_response_serializer)
+        new_url_response = marshal(new_url, shorten_url_response_model)
         return new_url_response, HTTPStatus.CREATED

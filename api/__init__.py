@@ -5,6 +5,8 @@ from flask_restx import Api
 from .auth.views import auth_namespace
 from .auth.models import User
 
+from .url.views import url_namespace
+
 from .config.config import config_chosen
 from .utils import db, migrate
 
@@ -36,6 +38,7 @@ def create_app(config=config_chosen):
         security="Bearer Auth")
 
     api.add_namespace(auth_namespace, path='/auth')
+    api.add_namespace(url_namespace, path='/url')
 
     jwt = JWTManager(app)
 

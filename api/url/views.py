@@ -14,10 +14,9 @@ url_namespace = Namespace(
     description='a namespace for url shortening logic')
 
 shorten_url_model = url_namespace.model(
-    'Url', shorten_url_serializer)
+    'CreateUrl', shorten_url_serializer)
 shorten_url_response_model = url_namespace.model(
-    'Url', shorten_url_response_serializer
-)
+    'GetUrl', shorten_url_response_serializer)
 
 @url_namespace.route('/shorten_url')
 class ShortenUrl(Resource, UrlHelpersMixin):
@@ -27,14 +26,17 @@ class ShortenUrl(Resource, UrlHelpersMixin):
     @jwt_required()
     def post(self):
         """
-        Save url information to database
+        Generate a short url
         """
         data = request.get_json()
 
         user_id = get_jwt_identity()
+
+        short_url = self.get_url_domain(request) + '/' + self.generate_short_text(request, 5)
+
         new_url = Url(
             target_url = data["target_url"],
-            short_url = self.generate_short_url(5, request),
+            short_url = short_url,
             user_id = user_id,
             user = User.get_by_id(user_id)
 
@@ -44,3 +46,15 @@ class ShortenUrl(Resource, UrlHelpersMixin):
 
         new_url_response = marshal(new_url, shorten_url_response_model)
         return new_url_response, HTTPStatus.CREATED
+    
+
+@url_namespace.route('<short_url>')
+class RedirectToTarget(Resource):
+    def get(self):
+        """
+        Redirect a given url to the destination url
+        """
+        
+
+        target_url = Url.query.filter_by()
+        

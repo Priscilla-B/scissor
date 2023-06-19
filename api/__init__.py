@@ -38,7 +38,7 @@ def create_app(config=config_chosen):
         security="Bearer Auth")
 
     api.add_namespace(auth_namespace, path='/auth')
-    api.add_namespace(url_namespace, path='/url')
+    api.add_namespace(url_namespace, path='/')
 
     jwt = JWTManager(app)
 

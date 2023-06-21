@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, redirect
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
 from flask_restx import Namespace, Resource, marshal
 from http import HTTPStatus
@@ -46,15 +46,32 @@ class ShortenUrl(Resource, UrlHelpersMixin):
 
         new_url_response = marshal(new_url, shorten_url_response_model)
         return new_url_response, HTTPStatus.CREATED
-    
 
-@url_namespace.route('<short_url>')
-class RedirectToTarget(Resource):
+@url_namespace.route('/urls')
+class GetUrls(Resource):
     def get(self):
+        """
+        Get all urls
+        """
+        urls = Url.query.all()
+
+
+@url_namespace.route('/<short_url>')
+class RedirectToTarget(Resource):
+    def get(self, short_url):
         """
         Redirect a given url to the destination url
         """
-        
 
-        target_url = Url.query.filter_by()
+        url_obj = Url.query.filter_by(short_url=short_url).first()
+        if url_obj:
+            target_url = url_obj.target_url
+            return {'redirect_url':target_url}
+        else:
+            return {'message': 'target url does not exist'}
+
+
+       
+
+        
         

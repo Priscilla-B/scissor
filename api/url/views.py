@@ -4,6 +4,7 @@ from flask_restx import Namespace, Resource, marshal
 from http import HTTPStatus
 
 from api.auth.models import User
+from api.analytics.views import save_url_analytics
 
 from .models import Url
 from .serializers import shorten_url_serializer, shorten_url_response_serializer
@@ -81,7 +82,8 @@ class RedirectToTarget(Resource):
         """
         Redirect a given url to the destination url
         """
-
+        save_url_analytics(request, url_code)
+        
         url_obj = Url.query.filter_by(url_code=url_code).first().target_url
 
         return redirect(url_obj)

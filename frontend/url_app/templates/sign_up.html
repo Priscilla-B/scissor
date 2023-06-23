@@ -4,14 +4,61 @@
 
 {% block content %}
 <br>
-{% for field, errors in form.errors.items() %}
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ ', '.join(errors) }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-{% endfor %}
-<form action="" method="POST">
-    <h3 align="center">Sign Up</h3>
-    {% include 'partials/generic_form.html' %}
+
+<form method="POST" action="{{ url_for("auth_views.sign_up")}}">
+    <div class="mb-3">
+        <label for="username" class="form-label">Firstname</label>
+        <input
+          type="text"
+          class="form-control"
+          id="firstname"
+          name="firstname"
+          placeholder="Enter your firstname"
+          autofocus
+        />
+    </div>
+    <div class="mb-3">
+        <label for="lastname" class="form-label">Lastname</label>
+        <input
+          type="text"
+          class="form-control"
+          id="lastname"
+          name="lastname"
+          placeholder="Enter your lastname"
+          autofocus
+        />
+      </div>
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input
+        type="text"
+        class="form-control"
+        id="username"
+        name="username"
+        placeholder="Enter your username"
+        autofocus
+      />
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email" />
+    </div>
+    <div class="mb-3 form-password-toggle">
+      <label class="form-label" for="password">Password</label>
+      <div class="input-group input-group-merge">
+        <input
+          type="password"
+          id="password"
+          class="form-control"
+          name="password"
+          placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+          aria-describedby="password"
+        />
+        <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+      </div>
+    </div>
+
+    <button class="btn btn-primary d-grid w-100">Sign up</button>
 </form>
+
 {% endblock %}

@@ -1,6 +1,9 @@
+import requests
+import os
+import json
+
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-from .forms import SignupForm
 
 
 auth_views = Blueprint("auth_views", __name__)
@@ -8,17 +11,32 @@ auth_views = Blueprint("auth_views", __name__)
 @auth_views.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
 
-    form = SignupForm(request.form)
+    if os.environ.get('CONFIG_CHOSEN') == 'dev':
+        endpoint = 'http://127.0.0.1:5000/api/auth/create_user'
+
+    
     if request.method == 'POST':
+
+        data = {
+        "first_name":request.form.get('firstname'),
+        "last_name":request.form.get('lastname'),
+        "username":request.form.get('username'),
+        "email":request.form.get('email'),
+        "password":request.form.get('password')
         
-        if form.validate():
-           
-            hashed_password = generate_password_hash(form.password.data, 'sha256')
+        }
+
+        response = requests.post(
+            url=endpoint,
+            data= data
+        )
+        
+        if response.status_code == 201:
            
             flash('Your account has been created successfully !')
             return redirect(url_for('views.home'))
     
-    return render_template('sign_up.html', form=form)
+    return render_template('sign_up.html')
 
 
 @auth_views.route('/login', methods=['GET', 'POST'])

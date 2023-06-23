@@ -1,0 +1,12 @@
+{% if current_user.is_authenticated %}
+<br>
+<div align="center">
+    <a href="/create_post">
+        <button type="button" class="btn btn-primary btn-lg">
+            Create a Post
+        </button>
+    </a>
+
+</div>
+<br>
+{% endif %}

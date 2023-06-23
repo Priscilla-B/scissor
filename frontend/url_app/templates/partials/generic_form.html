@@ -1,0 +1,17 @@
+<div class="form-group">
+
+    {% for input in form %}
+
+    {% if input.widget.input_type != 'hidden' %}
+    {{input.label}}
+    {% endif %}
+    
+    {{input(class_="form-control")}}
+    <br>
+    {% endfor %}
+    
+    <div align="center">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div> 
+    <br>
+</div>

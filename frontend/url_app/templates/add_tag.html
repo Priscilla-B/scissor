@@ -1,0 +1,21 @@
+{% extends 'partials/base.html' %}
+
+{% block title %}About{% endblock %}
+
+{% block content %}
+<h1 align="center">Add a New Tag</h1>
+
+<form action="" method="post">
+
+    <div class="form-group">
+        <label for="name">Tag Name</label>
+        <input type="text" name="name" id="name" class="form-control">
+    </div>
+    <br>
+    <div align="center">
+        <button type="submit" class="btn btn-lg btn-primary">Add</button>
+    </div>  
+</form>
+
+
+{% endblock %}

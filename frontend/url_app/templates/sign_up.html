@@ -1,0 +1,17 @@
+{% extends 'partials/base.html' %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<br>
+{% for field, errors in form.errors.items() %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ ', '.join(errors) }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+{% endfor %}
+<form action="" method="POST">
+    <h3 align="center">Sign Up</h3>
+    {% include 'partials/generic_form.html' %}
+</form>
+{% endblock %}

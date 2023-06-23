@@ -1,0 +1,11 @@
+{% extends 'partials/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1>Posts by {{username}}</h1>
+
+{% include 'partials/post_cards.html' %}
+
+
+{% endblock %}

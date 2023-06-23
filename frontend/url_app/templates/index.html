@@ -1,0 +1,13 @@
+{% extends 'partials/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% include 'partials/create_post_button.html' %}
+<h1>All Posts</h1>
+
+{% include 'partials/post_cards.html' %}
+<br>
+
+{% include 'partials/create_post_button.html' %}
+{% endblock %}

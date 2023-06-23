@@ -1,0 +1,26 @@
+{% extends 'partials/base.html' %}
+
+{% block title %}View Post{% endblock %}
+
+{% block content %}
+
+<h1>
+    {{post.title}}
+</h1>
+
+<p>
+    By {{post.author.username}} on {{post.date_created}}
+</p>
+
+<hr>
+{{post.summary}}
+<hr>
+{{post.body}}
+<hr>
+Tags:
+{% for tag in post.tags %}
+{{tag.name}}
+{% endfor %}
+<hr>
+
+{% endblock %}

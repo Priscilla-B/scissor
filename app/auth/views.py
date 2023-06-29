@@ -13,7 +13,7 @@ auth_views = Blueprint("auth_views", __name__)
 
 @auth_views.route('/create_user')
     # @jwt_required()
-def create_user(self):
+def create_user():
     """
     Create a new user
     """
@@ -27,7 +27,7 @@ def create_user(self):
     
 
 @auth_views.route('/login')
-def post(self):
+def login():
     """
     Login to get jwt token
     """
@@ -58,7 +58,7 @@ def post(self):
 
 @auth_views.route('/users')
 @jwt_required()
-def get_user(self):
+def get_users():
     """
     Get a list of all users
     """
@@ -81,7 +81,7 @@ def get_user(pk):
 
 @auth_views.route('/users/<int:pk>') 
 @jwt_required()
-def put(self, pk):
+def update_user(pk):
     """
     Update a user's details given their ID
     """
@@ -104,7 +104,7 @@ def put(self, pk):
     
 @auth_views.route('/users/<int:pk>') 
 @jwt_required()
-def delete(self, pk):
+def delete_user(pk):
     """
     Delete a user's details given their ID
     """
@@ -117,7 +117,7 @@ def delete(self, pk):
 
 @auth_views.route('/refresh')
 @jwt_required(refresh=True)
-def refresh_tokem(self):
+def refresh_tokem():
     """
     Get refresh token
     """

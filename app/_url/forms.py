@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, PasswordField, EmailField, SelectMultipleField, ValidationError
-from wtforms.validators import Length, InputRequired, EqualTo, Email
+from wtforms import StringField, TextAreaField,ValidationError
+from wtforms.validators import Length
 
 
 class ShortenUrlForm(FlaskForm):

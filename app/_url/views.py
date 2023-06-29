@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from flask_jwt_extended import (jwt_required, get_jwt_identity)
+from flask_login import current_user, login_required
 from http import HTTPStatus
 
 from app.auth.models import User
@@ -13,14 +13,13 @@ url_views = Blueprint("url_views", __name__)
 
 
 @url_views.route('/shorten_url')
-@jwt_required()
 def shorten_url(self):
     """
     Generate a short url
     """
     data = request.get_json()
 
-    user_id = get_jwt_identity()
+    user_id = current_user.get_id()
 
     url_obj = Url.query.filter_by(
         target_url=data['target_url'],
@@ -47,12 +46,12 @@ def shorten_url(self):
     return new_url, HTTPStatus.CREATED
 
 @url_views.route('/urls')
-@jwt_required()
+@login_required
 def get_urls():
     """
     Get all urls
     """
-    user_id = get_jwt_identity()
+    user_id = current_user.get_id()
     urls = Url.query.filter_by(user_id=user_id).all()
 
     return urls

@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_jwt_extended import JWTManager
+from flask_login import LoginManager
 
 from .auth.views import auth_views
 from .auth.models import User
@@ -20,21 +20,16 @@ def create_app(config=config_chosen):
     db.init_app(app)
     migrate.init_app(app, db)
 
-    # authorizations = {
-    #     "Bearer Auth":{
-    #         "type":"apiKey",
-    #         "in":"header",
-    #         "name":"Authorization",
-    #         "description":"Add a JWT with ** Bearer &lt;JWT&gt; ** to authorize"
-    #     }
-    # }
-
-    
 
     app.register_blueprint(auth_views, url_prefix='/auth')
     app.register_blueprint(url_views, path='/')
 
-    jwt = JWTManager(app)
+    login_manager = LoginManager(app)
+    login_manager.login_view = 'auth_views.login'
+
+    @login_manager.user_loader
+    def load_user(id):
+        return User.query.get(int(id))
 
     with app.app_context():
         db.create_all()

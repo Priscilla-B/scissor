@@ -1,6 +1,5 @@
-from flask import request, Blueprint
-from flask_jwt_extended import (create_access_token, create_refresh_token, 
-                                jwt_required, get_jwt_identity)
+from flask import request, Blueprint, flash, redirect, url_for, render_template
+from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.utils import db
@@ -26,38 +25,30 @@ def create_user():
     
     
 
-@auth_views.route('/login')
+@auth_views.route('/login', methods=['GET', 'POST'])
 def login():
     """
     Login to get jwt token
     """
-    data = request.get_json()
-    email = data.get('email')
-    password = data.get('password')
-    user = User.query.filter_by(email=email).first()
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        user = User.query.filter_by(email=email).first()
 
-    if user is None:
-        response = {"message": f"User with email {email} could not be found"}
-        return response, 400
-    
-    if not check_password_hash(user.password, password):
-        response =  {"message": "Password incorrect"}
-        http_status = 400
-    else:
-        access_token = create_access_token(identity=user.id)
-        refresh_token = create_refresh_token(identity=user.id)
+        if user is None:
+            flash('User or email doesn\'t exist', category='error')
+        
+        if not check_password_hash(user.password, password):
+            flash('Password is incorrect', category='error')
+        else:
+            flash('Logged in', category='success')
+            login_user(user, remember=True)
+            return redirect(url_for('views.home'))
 
-        response = {
-            'access_token': access_token,
-            'refresh_token': refresh_token
-        }
-        http_status = 200
-
-    return response, http_status
+    return render_template('login.html')
 
 
 @auth_views.route('/users')
-@jwt_required()
 def get_users():
     """
     Get a list of all users
@@ -69,7 +60,6 @@ def get_users():
 
 
 @auth_views.route('/users/<int:pk>')
-@jwt_required()
 def get_user(pk):
     """
     Get a user's details given their ID
@@ -80,7 +70,6 @@ def get_user(pk):
     return user
 
 @auth_views.route('/users/<int:pk>') 
-@jwt_required()
 def update_user(pk):
     """
     Update a user's details given their ID
@@ -103,7 +92,6 @@ def update_user(pk):
 
     
 @auth_views.route('/users/<int:pk>') 
-@jwt_required()
 def delete_user(pk):
     """
     Delete a user's details given their ID
@@ -113,17 +101,3 @@ def delete_user(pk):
     user.delete()
 
     return {"message":f"User with id {pk} has been deleted"}
-
-
-@auth_views.route('/refresh')
-@jwt_required(refresh=True)
-def refresh_tokem():
-    """
-    Get refresh token
-    """
-    username = get_jwt_identity()
-
-    access_token = create_access_token(identity=username)
-
-
-    return {'access_token': access_token}

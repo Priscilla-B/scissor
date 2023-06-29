@@ -1,13 +1,12 @@
 from flask import Flask
 from flask_jwt_extended import JWTManager
-from flask_restx import Api
 
 from .auth.views import auth_namespace
 from .auth.models import User
 
-from .url.views import url_namespace
+from ._url.views import url_namespace
 
-from .config.config import config_chosen
+from .config import config_chosen
 from .utils import db, migrate
 
  
@@ -30,12 +29,7 @@ def create_app(config=config_chosen):
         }
     }
 
-    api = Api(
-        app,
-        title="Scissor - URL Shortening API",
-        description="A REST API for a url shortening services",
-        authorizations=authorizations,
-        security="Bearer Auth")
+    
 
     api.add_namespace(auth_namespace, path='/api/auth')
     api.add_namespace(url_namespace, path='/api/')

@@ -4,23 +4,38 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.utils import db
 from .models import User
-from .utils import save_user_obj
+from .forms import SignupForm
 
 
 auth_views = Blueprint("auth_views", __name__)
         
 
-@auth_views.route('/create_user')
-    # @jwt_required()
+@auth_views.route('/sign-up', methods=['GET', 'POST'])
 def create_user():
     """
     Create a new user
     """
-    data = request.get_json()
+    form = SignupForm(request.form)
+    if request.method == 'POST':
+        
+        if form.validate():
+            
+            hashed_password = generate_password_hash(form.password.data, 'sha256')
+            new_user = User(
+                first_name=form.first_name.data, 
+                last_name=form.last_name.data, 
+                email=form.email.data, 
+                username=form.username.data, 
+                password=hashed_password)
+                
+                    
+            new_user.save()
+            login_user(new_user)
+            print(current_user, current_user)
+            flash('Your account has been created successfully !')
+            return redirect(url_for('views.home'))
 
-    create_user_response = save_user_obj(data)
-    new_user = create_user_response[0]
-    return new_user, create_user_response[1]
+    return render_template('sign_up.html', form=form)
         
     
     
@@ -36,14 +51,18 @@ def login():
         user = User.query.filter_by(email=email).first()
 
         if user is None:
-            flash('User or email doesn\'t exist', category='error')
+            flash('Incorrect username or password', category='error')
         
         if not check_password_hash(user.password, password):
-            flash('Password is incorrect', category='error')
+            flash('Incorrect username or password.', category='error')
         else:
-            flash('Logged in', category='success')
-            login_user(user, remember=True)
-            return redirect(url_for('views.home'))
+            is_logged_in = login_user(user, remember=True)
+            if is_logged_in:
+            
+                flash('Logged in', category='success')
+                return redirect(url_for('views.home'))
+            else:
+                flash('Incorrect username or password', category='error')
 
     return render_template('login.html')
 

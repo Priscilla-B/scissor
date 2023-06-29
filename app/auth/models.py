@@ -1,4 +1,5 @@
 from sqlalchemy.sql import func
+from flask_login import UserMixin
 
 from app.utils import db
 from app.utils.utils import ModelCreationMixin
@@ -6,7 +7,7 @@ from app.utils.utils import ModelCreationMixin
 
 
 
-class User(db.Model, ModelCreationMixin):
+class User(db.Model, ModelCreationMixin, UserMixin):
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -15,7 +16,6 @@ class User(db.Model, ModelCreationMixin):
     username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
-    is_active = db.Column(db.Boolean(), default=False)
     date_created = db.Column(db.DateTime(timezone=True), default=func.now())
     
     def __repr__(self):

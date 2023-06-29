@@ -1,13 +1,14 @@
-<div class="form-group">
+<div class="col-md-4 offset-md-4">
 
     {% for input in form %}
+    <div class="form-group mt-3">
+        {% if input.widget.input_type != 'hidden' %}
+        {{input.label}}
+        {% endif %}
+        
+        {{input(class_="form-control")}}
 
-    {% if input.widget.input_type != 'hidden' %}
-    {{input.label}}
-    {% endif %}
-    
-    {{input(class_="form-control")}}
-    <br>
+    </div>
     {% endfor %}
     
     <div align="center">

@@ -12,11 +12,39 @@ from .utils import generate_short_text, get_url_domain
 url_views = Blueprint("url_views", __name__)
 
 
-@url_views.route('/')
-@url_views.route('/home')
+@url_views.route('/', methods=['GET', 'POST'])
+@url_views.route('/home', methods=['GET', 'POST'])
 def home():
+    form = ShortenUrlForm(request.form)
 
-    return render_template('_url/index.html')
+    if request.method == 'POST':
+        if form.validate():
+
+                user_id = current_user.get_id()
+                target_url = form.target_url.data
+
+                url_obj = Url.query.filter_by(
+                    target_url=target_url,
+                    user_id=user_id).first()
+                if url_obj:
+                    return render_template('_url/index.html', form=form, url_obj=url_obj)
+                url_code = generate_short_text(request, 5)
+                short_url = get_url_domain(request)  + 'r/' + url_code
+
+                new_url = Url(
+                    url_code = url_code,
+                    target_url = target_url,
+                    short_url = short_url,
+                    user_id = user_id,
+                    user = User.get_by_id(user_id)
+
+                )
+
+                new_url.save()
+                return render_template('_url/index.html', form=form, url_obj=url_obj)
+
+    else:
+        return render_template('_url/index.html', form=form)
 
 
 @url_views.route('/shorten_url', methods=['GET', 'POST'])

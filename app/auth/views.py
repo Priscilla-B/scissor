@@ -33,9 +33,9 @@ def create_user():
             login_user(new_user)
             print(current_user, current_user)
             flash('Your account has been created successfully !')
-            return redirect(url_for('views.home'))
+            return redirect(url_for('url_views.home'))
 
-    return render_template('sign_up.html', form=form)
+    return render_template('auth/sign_up.html', form=form)
         
     
     
@@ -60,11 +60,19 @@ def login():
             if is_logged_in:
             
                 flash('Logged in', category='success')
-                return redirect(url_for('views.home'))
+                return redirect(url_for('url_views.home'))
             else:
                 flash('Incorrect username or password', category='error')
 
-    return render_template('login.html')
+    return render_template('auth/login.html')
+
+@auth_views.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('Logged out', category='success')
+    return redirect(url_for('url_views.home'))
+
 
 
 @auth_views.route('/users')

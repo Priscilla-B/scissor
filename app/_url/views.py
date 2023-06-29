@@ -11,6 +11,12 @@ from .utils import generate_short_text, get_url_domain
 url_views = Blueprint("url_views", __name__)
 
 
+@url_views.route('/')
+@url_views.route('/home')
+def home():
+
+    return render_template('_url/index.html')
+
 
 @url_views.route('/shorten_url')
 def shorten_url(self):

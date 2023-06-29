@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_login import LoginManager
 
+from .home.views import home_views
 from .auth.views import auth_views
 from .auth.models import User
 
@@ -20,10 +21,10 @@ def create_app(config=config_chosen):
     db.init_app(app)
     migrate.init_app(app, db)
 
-
+    app.register_blueprint(home_views, path='/')
     app.register_blueprint(auth_views, url_prefix='/auth')
     app.register_blueprint(url_views, path='/')
-
+    
     login_manager = LoginManager(app)
     login_manager.login_view = 'auth_views.login'
 

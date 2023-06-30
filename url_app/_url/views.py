@@ -2,8 +2,8 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import current_user, login_required
 from http import HTTPStatus
 
-from app.auth.models import User
-from app.analytics.views import save_url_analytics
+from url_app.auth.models import User
+from url_app.analytics.views import save_url_analytics
 
 from .models import Url
 from .forms import ShortenUrlForm

@@ -1,7 +1,7 @@
 from sqlalchemy.sql import func
 
-from app.utils import db
-from app.utils.utils import ModelCreationMixin
+from url_app.utils import db
+from url_app.utils.utils import ModelCreationMixin
 
 
 

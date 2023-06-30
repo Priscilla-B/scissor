@@ -1,8 +1,8 @@
 from sqlalchemy.sql import func
 from flask_login import UserMixin
 
-from app.utils import db
-from app.utils.utils import ModelCreationMixin
+from url_app.utils import db
+from url_app.utils.utils import ModelCreationMixin
 
 
 

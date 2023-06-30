@@ -1,7 +1,7 @@
 from sqlalchemy.sql import func
 
-from app.utils import db
-from app.utils.utils import ModelCreationMixin
+from url_app.utils import db
+from url_app.utils.utils import ModelCreationMixin
 
 class Url(db.Model, ModelCreationMixin):
     url_code = db.Column(db.String(5), primary_key=True)

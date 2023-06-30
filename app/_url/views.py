@@ -15,33 +15,34 @@ url_views = Blueprint("url_views", __name__)
 @url_views.route('/', methods=['GET', 'POST'])
 @url_views.route('/home', methods=['GET', 'POST'])
 def home():
-    form = ShortenUrlForm(request.form)
+    form = request.form
 
     if request.method == 'POST':
-        if form.validate():
 
-                user_id = current_user.get_id()
-                target_url = form.target_url.data
+        user_id = current_user.get_id()
+        target_url = form.get('long-url')
 
-                url_obj = Url.query.filter_by(
-                    target_url=target_url,
-                    user_id=user_id).first()
-                if url_obj:
-                    return render_template('_url/index.html', form=form, url_obj=url_obj)
-                url_code = generate_short_text(request, 5)
-                short_url = get_url_domain(request)  + 'r/' + url_code
+        url_obj = Url.query.filter_by(
+            target_url=target_url,
+            user_id=user_id).first()
+        if url_obj:
+            url = url_obj
 
-                new_url = Url(
-                    url_code = url_code,
-                    target_url = target_url,
-                    short_url = short_url,
-                    user_id = user_id,
-                    user = User.get_by_id(user_id)
+        else:
+            url_code = generate_short_text(form, 5)
+            short_url = get_url_domain(form, request)  + 'r/' + url_code
 
-                )
+            url = Url(
+                url_code = url_code,
+                target_url = target_url,
+                short_url = short_url,
+                user_id = user_id,
+                user = User.get_by_id(user_id)
 
-                new_url.save()
-                return render_template('_url/index.html', form=form, url_obj=url_obj)
+            )
+            url.save()
+
+        return render_template('_url/index-url.html', url=url)
 
     else:
         return render_template('_url/index.html', form=form)

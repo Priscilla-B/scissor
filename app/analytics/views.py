@@ -8,6 +8,7 @@ analytics_views = Blueprint("analytics_views", __name__)
 
 def save_url_analytics(request, url_code):
     ip = request.remote_addr
+    print("**************ip address***********", ip)
     if request.headers.getlist("X-Forwarded-For"):
         ip = request.headers.getlist("X-Forwarded-For")[0]
 

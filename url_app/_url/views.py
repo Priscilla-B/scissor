@@ -19,7 +19,14 @@ def home():
 
     if request.method == 'POST':
 
-        user_id = current_user.get_id()
+        if current_user.is_authenticated:
+            user_id = current_user.get_id()
+            User.get_by_id(user_id)
+            
+        else:
+            user_id = None
+            user = None
+
         target_url = form.get('long-url')
 
         url_obj = Url.query.filter_by(
@@ -37,7 +44,7 @@ def home():
                 target_url = target_url,
                 short_url = short_url,
                 user_id = user_id,
-                user = User.get_by_id(user_id)
+                user = user
 
             )
             url.save()
@@ -74,5 +81,4 @@ def redirect_to_target(url_code):
 
        
 
-        
         

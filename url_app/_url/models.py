@@ -8,5 +8,5 @@ class Url(db.Model, ModelCreationMixin):
     short_url = db.Column(db.String(30), nullable=False)
     target_url = db.Column(db.String(150), nullable=False)
     is_active = db.Column(db.Boolean(), default=True)
-    user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable=True)
     user = db.relationship('User', backref='user')

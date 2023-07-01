@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_login import LoginManager
 
 from .auth.views import auth_views
@@ -33,6 +33,11 @@ def create_app(config=config_chosen):
     with app.app_context():
         db.create_all()
 
+    @app.errorhandler(404)
+    def invalid_route(e):
+        return render_template('404-page.html')
+    
+    
     @app.shell_context_processor
     def make_shell_context():
         return {

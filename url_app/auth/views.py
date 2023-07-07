@@ -31,7 +31,6 @@ def create_user():
                     
             new_user.save()
             login_user(new_user)
-            print(current_user, current_user)
             flash('Your account has been created successfully !')
             return redirect(url_for('url_views.home'))
 
@@ -45,24 +44,24 @@ def login():
     """
     Login to get jwt token
     """
+   
+   
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
+        
         user = User.query.filter_by(email=email).first()
 
-        if user is None:
-            flash('Incorrect username or password', category='error')
-        
-        if not check_password_hash(user.password, password):
-            flash('Incorrect username or password.', category='error')
-        else:
-            is_logged_in = login_user(user, remember=True)
-            if is_logged_in:
-            
-                flash('Logged in', category='success')
-                return redirect(url_for('url_views.home'))
-            else:
-                flash('Incorrect username or password', category='error')
+        if user is not None:
+            if check_password_hash(user.password, password):
+                if login_user(user, remember=True):
+                    flash('Logged in', category='success')
+                    return redirect(url_for('url_views.home'))
+              
+        flash('Incorrect username or password', category='error')
+        return render_template('auth/login.html', email=email, password=password)
+                
+
 
     return render_template('auth/login.html')
 

@@ -16,23 +16,28 @@ url_views = Blueprint("url_views", __name__)
 @url_views.route('/home', methods=['GET', 'POST'])
 def home():
     form = request.form
+    form.domain = request.url_root
     url = None
+
+    if current_user.is_authenticated:
+        user_id = current_user.get_id()
+        user = User.get_by_id(user_id)
+    else:
+        user_id = None
+        user = None
+
     if request.method == 'POST':
+        target_url = form.get('target_url')
+        url_code = form.get('url_code') 
 
-        if current_user.is_authenticated:
-            user_id = current_user.get_id()
-            user = User.get_by_id(user_id)
-            
-        else:
-            user_id = None
-            user = None
-
-        target_url = form.get('long-url')
-
+        
         if not url_is_valid(target_url):
             flash('Long url provided is not valid', category='error')
-            request.form.target_url = target_url
             return render_template('_url/index.html', form = form)
+        
+        if url_code != '' and url_code_exists(url_code):
+            flash('Chosen custom text already exists for another url', category='error')
+            return render_template('_url/index.html', form = request.form)
 
 
         url_obj = Url.query.filter_by(

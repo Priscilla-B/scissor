@@ -1,5 +1,6 @@
 import string
 import random
+import requests
 
 from .models import Url
 
@@ -30,6 +31,11 @@ def get_url_domain(form, request):
     if domain[-1] != '/':
         domain += '/'
     return domain
+
+
+def url_is_valid(url):
+    response = requests.get(url)
+    return response.status_code == 200
 
     
     

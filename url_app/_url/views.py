@@ -7,7 +7,7 @@ from url_app.analytics.views import save_url_analytics
 
 from .models import Url
 from .forms import ShortenUrlForm
-from .utils import generate_short_text, get_url_domain
+from .utils import generate_short_text, get_url_domain, url_is_valid
 
 url_views = Blueprint("url_views", __name__)
 
@@ -16,12 +16,12 @@ url_views = Blueprint("url_views", __name__)
 @url_views.route('/home', methods=['GET', 'POST'])
 def home():
     form = request.form
-
+    url = None
     if request.method == 'POST':
 
         if current_user.is_authenticated:
             user_id = current_user.get_id()
-            User.get_by_id(user_id)
+            user = User.get_by_id(user_id)
             
         else:
             user_id = None
@@ -29,13 +29,21 @@ def home():
 
         target_url = form.get('long-url')
 
+        if not url_is_valid(target_url):
+            flash('Long url provided is not valid', category='error')
+            request.form.target_url = target_url
+            return render_template('_url/index.html', form = form)
+
+
         url_obj = Url.query.filter_by(
             target_url=target_url,
             user_id=user_id).first()
         if url_obj:
             url = url_obj
+            flash('Returned your existing short url for provided long url ', category='success')
 
         else:
+            
             url_code = generate_short_text(form, 5)
             short_url = get_url_domain(form, request)  + 'r/' + url_code
 
@@ -47,7 +55,7 @@ def home():
                 user = user
 
             )
-            url.save()
+            url.save()       
 
         return render_template('_url/index-url.html', url=url)
 

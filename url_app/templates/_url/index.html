@@ -14,20 +14,20 @@
     <div class="col-md-6 offset-md-3">
       <div class="form-group mt-3">
         <label for="long-url">Long Url</label>
-        <input type="long-url" id="email" name="long-url" class="form-control" >
+        <input type="url" id="email" name="long-url" class="form-control" value="{{form.target_url}}">
     </div>
     <div class="row">
 
       <!-- <div class="input-group"> -->
         <div class="form-group mt-3 col-md-6">
           <label for="domain">Domain</label>
-          <input type="domain" id="domain" name="domain" class="form-control" value="{{request.url_root}}" placeholder="domain">
+          <input type="url" id="domain" name="domain" class="form-control" value="{{request.url_root}}" placeholder="domain">
           <i class="text-info">Enter custom domain here</i>
         </div>
         <div class="form-group mt-3 col-md-6">
           <!-- <button class="btn btn-secondary">/</button> -->
           <label for="url-code">Short text</label col-md-6">
-          <input type="url-code" id="url-code" name="url-code" class="form-control" >
+          <input type="text" maxlength="7" id="url-code" name="url-code" class="form-control" >
         <!-- </div> -->
         
       </div>

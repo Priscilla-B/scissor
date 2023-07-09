@@ -7,7 +7,7 @@ from http import HTTPStatus
 from url_app.auth.models import User
 from url_app.analytics.views import save_url_analytics
 
-from .models import Url
+from .models import Url, db
 from .forms import ShortenUrlForm
 from .utils import generate_short_text, get_url_domain, url_is_valid, url_code_exists
 
@@ -126,6 +126,25 @@ def url_view(url_code):
         flash('You do not have permission to edit this url.', category='error')
 
     return render_template('_url/index-url.html', url=url)
+
+@url_views.route('/r/<url_code>/delete')  
+@login_required
+def delete_url(url_code):
+    url = Url.query.filter_by(url_code=url_code).first()
+    user_id = current_user.get_id()
+    if not url:
+        flash("Url does not exist.", category='error')
+
+    elif user_id != url.user_id:
+        flash('You do not have permission to delete this url.', category='error')
+
+    else:
+        db.session.delete(url)
+        db.session.commit()
+
+    flash('Url has been deleted!', category='success')
+    return redirect(url_for('url_views.home'))
+
     
 
 @url_views.route('/urls')

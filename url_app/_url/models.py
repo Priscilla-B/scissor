@@ -10,3 +10,4 @@ class Url(db.Model, ModelCreationMixin):
     is_active = db.Column(db.Boolean(), default=True)
     user_id = db.Column(db.String(20), db.ForeignKey('user.id'), nullable=True)
     user = db.relationship('User', backref='user')
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())

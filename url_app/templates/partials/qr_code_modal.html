@@ -1,0 +1,70 @@
+<!-- qr code modal -->
+
+<div class="modal fade" id="qrCodeModal" tabindex="-1" >
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" align="center">
+                <h5 class="modal-title" >QR Code Generated!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div align="center">
+                    <img 
+                    src="https://api.qrserver.com/v1/create-qr-code/?data={{url.short_url}}&amp;size=150x150" 
+                    alt="" 
+                    title=""
+                    />
+                </div>
+                
+            </div>
+          
+                
+            <div align="center" class="mb-4">
+                <button
+                id="modal-btn-download"
+                class="btn btn-primary" >
+                Download
+               </button>
+            </div>
+            
+        
+        </div>
+    </div>
+  </div>
+  <!-- end qr code modal -->
+
+
+<script>
+    async function downloadImage(imageSrc, imageName) {
+    const response = await fetch(imageSrc);
+  
+    const blobImage = await response.blob();
+    
+    const href = URL.createObjectURL(blobImage);
+
+    const anchorElement = document.createElement('a');
+    anchorElement.href = href;
+    anchorElement.download = imageName;
+
+    document.body.appendChild(anchorElement);
+    anchorElement.click();
+  
+    document.body.removeChild(anchorElement);
+    window.URL.revokeObjectURL(href);
+  }
+  
+  const btn = document.getElementById('modal-btn-download');
+  const imageSrc = 'https://api.qrserver.com/v1/create-qr-code/?data={{url.short_url}}&amp;size=150x150'
+  const imageName = '{{url.url_code}}'
+  
+  btn.addEventListener('click', () => {
+    downloadImage(imageSrc, imageName)
+      .then(() => {
+        console.log('The image has been downloaded');
+      })
+      .catch(err => {
+        console.log('Error downloading image: ', err);
+      });
+  });
+  
+</script>

@@ -1,0 +1,63 @@
+{% extends 'partials/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h2 align="center" class="mt-3">Scissor</h2>
+
+<h4 align="center" class="mt-5">My Urls</h4>
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            {% for url in urls %}
+            <div class="card mt-2">
+                <div class="card-body">
+                <h5 class="card-title">
+                    <a href="{{url.short_url}}" class="text-info text-decoration-none">{{url.short_url}}</a>
+                </h5>
+                <p class="card-text">{{url.target_url}}</p>
+                <p class="text-muted">{{url.date_created.strftime("%b %d %Y %H:%M:%S")}}</p>
+                
+                {% include 'partials/url_actions.html' %}
+                </div>
+            </div>
+            {% include 'partials/qr_code_modal.html' %}
+            {% endfor %}
+        </div>
+    </div>
+   
+    
+    
+
+    <!-- <script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous">
+    </script>
+
+    <script>
+        $('#qrCodeModal').on('show.bs.modal', function(e){
+            const userID = $(e.relatedTarget).data('selected-url')
+            // get the user id from the send email button
+            // immediately the modal opens
+
+    
+            $.ajax({  // initialize an ajax request
+            url: url,
+            data: {
+                'user_id': userID
+                },
+
+                success: function(data) {
+                console.log(data)
+                    
+                }
+            })
+           
+           
+    
+
+            
+        })
+    </script> -->
+
+{% endblock %}

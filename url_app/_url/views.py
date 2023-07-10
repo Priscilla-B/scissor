@@ -156,6 +156,7 @@ def get_urls():
     user_id = current_user.get_id()
     urls = Url.query.filter_by(user_id=user_id).all()
 
+    return render_template('_url/urls-list.html', urls=urls)
     return urls
         
 

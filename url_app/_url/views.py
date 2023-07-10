@@ -82,48 +82,51 @@ def edit_url(url_code):
     
     parsed_url = urlparse(url.short_url)
     form.domain = f'{parsed_url.scheme}://{parsed_url.netloc}'
-    user_id = current_user.get_id()
 
+    user_id = int(current_user.get_id())
     if user_id != url.user_id:
         flash('You do not have permission to edit this url.', category='error')
+        return redirect(url_for('url_views.url_view', url_code=url_code))
         
-    else:
-        if request.method == 'POST':
-            form = request.form
+    
+    if request.method == 'POST':
+        form = request.form
 
-            if not url_is_valid(form.get('target_url')):
-                flash('Long url provided is not valid', category='error')
-                return render_template('_url/index.html', form = form)
+        if not url_is_valid(form.get('target_url')):
+            flash('Long url provided is not valid', category='error')
+            return render_template('_url/index.html', form = form)
 
-            if url_code_exists(form.get('url_code')):
-                flash('Provided short text has been used for another url', category='error')
+        if url_code_exists(form.get('url_code')):
+            flash('Provided short text has been used for another url', category='error')
 
-            else:
-                url_code = generate_short_text(form, 5)
-                short_url = get_url_domain(form, request) + url_code
+        else:
+            url_code = generate_short_text(form, 5)
+            short_url = get_url_domain(form, request) + url_code
 
-                url.url_code = url_code
-                url.target_url = form.get('target_url')
-                url.short_url = short_url
+            url.url_code = url_code
+            url.target_url = form.get('target_url')
+            url.short_url = short_url
 
-                url.save() 
+            url.save() 
             flash('Url has been modified!', category='success')
-            # session['url'] = url
+    
             return redirect(url_for('url_views.url_view', url_code=url_code))
-            # return render_template('_url/index-url.html', url=url)
+        
    
-        return render_template('_url/edit-url.html', form=form)
+    return render_template('_url/edit-url.html', form=form)
+
+
 
 @url_views.route('/r/<url_code>/')  
 @login_required
 def url_view(url_code):
     url = Url.query.filter_by(url_code=url_code).first()
-    user_id = current_user.get_id()
+    user_id = int(current_user.get_id())
     if not url:
         flash("Url does not exist.", category='error')
 
     elif user_id != url.user_id:
-        flash('You do not have permission to edit this url.', category='error')
+        flash('You do not have permission to view this url.', category='error')
 
     return render_template('_url/index-url.html', url=url)
 
@@ -156,9 +159,7 @@ def get_urls():
     user_id = current_user.get_id()
     urls = Url.query.filter_by(user_id=user_id).all()
 
-    return render_template('_url/urls-list.html', urls=urls)
-    return urls
-        
+    return render_template('_url/urls-list.html', urls=urls)        
 
 
 @url_views.route('/r/<url_code>')

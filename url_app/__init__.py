@@ -5,6 +5,7 @@ from .auth.views import auth_views
 from .auth.models import User
 
 from ._url.views import url_views
+from .analytics.views import analytics_views
 
 from .config import config_chosen
 from .utils import db, migrate
@@ -22,6 +23,7 @@ def create_app(config=config_chosen):
 
     app.register_blueprint(auth_views, url_prefix='/auth')
     app.register_blueprint(url_views, path='/')
+    app.register_blueprint(analytics_views, url_prefix='/analytics')
     
     login_manager = LoginManager(app)
     login_manager.login_view = 'auth_views.login'

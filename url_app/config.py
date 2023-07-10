@@ -34,8 +34,10 @@ class TestConfig(Config):
 
 
 class ProdConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///'+os.path.join(BASE_DIR, 'db.sqlite3')
-    # still using sqlite in prod as I'll need a paid pythonanywhere account to access postgres
+    if os.environ.get('DATABASE_URL'):
+        SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL').replace("postgres://", "postgresql://", 1)
+    else:
+        SQLALCHEMY_DATABASE_URI = 'sqlite:///'+os.path.join(BASE_DIR, 'db.sqlite3')
     DEBUG = False
 
 

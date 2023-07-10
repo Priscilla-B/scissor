@@ -1,4 +1,4 @@
-set -0 errexit
+set -o errexit
 
 flask db migrate
 flask db upgrade

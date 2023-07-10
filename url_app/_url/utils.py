@@ -25,11 +25,13 @@ def generate_short_text(form, n):
     
 def get_url_domain(form, request):
     domain = form.get('domain')
-    if not domain:
-        domain = f'{request.url_root}/r/'
 
     if domain[-1] != '/':
         domain += '/'
+
+    if domain == request.url_root:
+        domain += 'r/'
+   
     return domain
 
 
